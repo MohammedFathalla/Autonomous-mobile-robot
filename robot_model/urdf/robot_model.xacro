@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
+
+<xacro:include filename="$(find robot_model)/urdf/robot.gazebo"/>
+    
+<link name="odom"/>
+
+    <link name="base_link">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <mass value="10.0"/>
+            <inertia ixx="0.5" ixy="0.0" ixz="0.0" 
+            iyy="1.0" iyz="0.0" 
+            izz="0.1"/>
+</inertial>
+
+    
+        <visual name="">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="0.7 0.5 0.11"/>
+            </geometry>
+            <material name="">
+                <color rgba="1.0 1.0 1.0 1.0"/>
+                <texture filename=""/>
+            </material>
+        </visual>
+
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="0.7 0.5 0.1"/>
+            </geometry>
+        </collision>
+    
+    </link>
+    
+
+    <joint name="base_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <parent link="odom"/>
+        <child link="base_link"/>
+        <axis xyz="0.0 0.0 0.0"/>
+        <limit lower="0.0" upper="0.0" effort="0.0" velocity="0.0"/>
+    </joint>
+
+
+    <xacro:macro name="wheel" params="name x y">
+
+        <link name="${name}_link">
+
+            <inertial>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <mass value="2.0"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+            </inertial>
+
+            <visual name="">
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                   <cylinder radius="0.1" length="0.05"/>
+                </geometry>
+                <material name="">
+                    <color rgba="1.0 1.0 0.0 1.0"/>
+                    <texture filename=""/>
+                </material>
+            </visual>
+
+            <collision>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                    <cylinder radius="0.08" length="0.02"/>
+                </geometry>
+            </collision>
+
+        </link>
+        
+        
+        <joint name="${name}_joint" type="continuous">
+            <origin xyz="${x} ${y} 0.0" rpy="-1.57 0.0 0.0"/>
+            <parent link="base_link"/>
+            <child link="${name}_link"/>
+            <axis xyz="0.0 0.0 1.0"/>
+            <limit lower="0.0" upper="0.0" effort="0.0" velocity="0.0"/>
+        </joint>
+
+    </xacro:macro>
+
+<xacro:wheel name = "front_right_wheel" x ="0.2" y = "-0.275"/>
+<xacro:wheel name = "front_left_wheel" x ="0.2" y = "0.275"/>
+<xacro:wheel name = "back_right_wheel" x ="-0.2" y = "-0.275"/>
+<xacro:wheel name = "back_left_wheel" x ="-0.2" y = "0.275"/>
+
+
+  <!-- Lidar Laser -->
+  <link name="Lidar_link">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+    <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://robot_model/meshes/hokuyo.dae"/>
+      </geometry>
+    </visual>
+
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+
+
+<joint name="hokuyo_joint" type="fixed">
+    <axis xyz="0 0 0" />
+    <origin xyz="0 0 0.12" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="Lidar_link"/>
+  </joint>
+
+
+</robot>
+
+
+<!-- Used for only single proberty like defining a constant -->
+
+<!--
+<xacro:property name=" pi " value=" 3.14"/>
+<xacro:property name="wheel" value="front_right_wheel"/>
+<xacro:property name="wheel" value="front_left_wheel"/>
+<xacro:property name="wheel" value="back_right_wheel"/>
+<xacro:property name="wheel" value="back_left_wheel"/> 
+-->

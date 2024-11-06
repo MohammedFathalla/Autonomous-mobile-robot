@@ -1,0 +1,57 @@
+footprint: [[-0.34, -0.32], [-0.34, 0.32], [0.34, 0.32], [0.34, -0.32]]   # 0.05 was added to all of them   0.32   0.24
+footprint_padding: 0.03
+
+# Before adding my custom robot
+
+max_obstacle_height: 0.30  # was 0.3 ( firstly )   # secondly was 0.35  [[-0.32, -0.24], [-0.32, 0.24], [0.32, 0.24], [0.32, -0.24]]
+
+laser_layer:
+  observation_sources: scan
+  scan:
+    data_type: LaserScan
+    topic: /scan    # filtered_scan  scan
+    marking: true   # marking dynamic obstacles when found
+    clearing: true  # clearing dynamic obstacles when it was not found
+    min_obstacle_height: 0.05
+    max_obstacle_height: 0.30
+    obstacle_range: 8.0   # was 8.0
+    raytrace_range: 9.0   # was 9.0
+
+# cost_scaling_factor and inflation_radius were now moved to the inflation_layer ns
+
+static_layer:
+  enabled:              true
+  map_topic:             map
+  subscribe_to_updates: true
+  track_unknown_space:  false
+
+# cost_scaling_factor and inflation_radius were now moved to the inflation_layer ns
+inflation_layer:
+  enabled:              true
+  cost_scaling_factor:  3.0     # exponential rate at which the obstacle cost drops off (default: 10)
+
+    # High cost scaling factor = Cost drops off rapidly as you move away from the obstacle.
+    # This makes the robot more cautious near obstacles (stays further away).
+    # Low cost scaling factor = Cost drops off slowly, so the robot can navigate closer to obstacles (less cautious).
+
+  inflation_radius:     1.1    # max. distance from an obstacle at which costs are incurred for planning  # was 0.7   # was 0.5   --  last was 0.2
+
+
+### Not Bad
+# inflation_radius: 0.45  # Reduced
+# cost_scaling_factor: 2.9  # Reduced to make inflation less aggressive
+
+
+## Information
+
+# The path planner consider the robot as a point
+
+# A higher cost scaling factor increases the influence of obstacle costs in path planning, making the robot prioritize obstacle avoidance more strongly.
+
+
+############ ---------------------------- ##############
+# Inflation radius sets the absolute limit till which an object exerts influence or cost.
+# Starting from the inflation radius and beyond, the costmap will have 0 cost due to the obstacle.
+
+# Cost Scaling Factor : This factor defines how steeply or gradually the cost will decrease as we move farther away from the obstacle. It is inversely proportional to the cost of a cell.
+# So a higher value means the costs decrease quickly as we move farther from an obstacle. A lower value would lead to a more gentle slope.

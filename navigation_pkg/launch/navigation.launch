@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- AMCL -->
+    <include file="$(find navigation_pkg)/launch/amcl.launch"/>  
+
+    <!-- move_base -->
+    <include file="$(find navigation_pkg)/launch/move_base.launch"/>
+
+    <!-- Map simulation -->
+    <arg name="map_file" default="$(find navigation_pkg)/map_files/map.yaml"/>
+
+    <!-- Map server -->
+    <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+    <!-- move_base -->
+    <include file="$(find robot_model)/launch/gazebo.launch"/>
+
+ <arg name="open_rviz" default="true"/>
+  <group if="$(arg open_rviz)"> 
+    <node pkg="rviz" type="rviz" name="rviz" required="true"
+    args="-d $(find navigation_pkg)/config/config.rviz"
+          />
+  </group>
+
+</launch>

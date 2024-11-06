@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<launch>
+
+ <!-- parsing and putting xacro and urdf in parameter server to enable joint and robot state publisher to understand it -->
+ <!-- For inserting Xacro Files-->
+ <param name="robot_description" command="xacro '$(find robot_model)/urdf/robot_model.xacro'"/>
+
+
+ <!-- Used to Publish fixed frames ( transformations ) -->
+
+ <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+ </node>
+
+
+<!-- Used to Publish joint states -->
+
+ <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" />
+   <param name="use_gui" value="false"/> 
+  
+
+<!-- for running rviz -->
+
+ <node pkg="rviz" type="rviz" name="rviz" />
+
+
+</launch>

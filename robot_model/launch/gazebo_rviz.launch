@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<!-- This Launch file includes all parameters , nodes that will include and open the robot in gazebo and rviz -->
+
+<launch>
+
+<!-- parsing and putting xacro and urdf in parameter server to enable joint and robot state publisher to understand it -->
+
+ <!-- For inserting Xacro Files-->
+
+ <param name="robot_description" command="xacro '$(find robot_model)/urdf/robot_model.xacro'"/>
+
+ <!-- Used to Publish fixed frames ( transformations ) -->
+
+ <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"> </node>
+
+
+ <!-- Used to Publish joint states -->
+ 
+ <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" />
+
+
+ <!-- Custom World File -->
+ <arg name ="world" default= "$(find robot_model)/worlds/mine.world"/>
+
+
+<!-- for running rviz -->
+
+ <node pkg="rviz" type="rviz" name="rviz" />
+
+
+ <!-- Gazebo Plugin  -->
+ 
+ <include file="$(find gazebo_ros)/launch/empty_world.launch">
+
+  <arg name="world_name" value="$(arg world)" />
+    <arg name="verbose" value="false" />
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include> 
+
+
+  <node pkg="gazebo_ros" type="spawn_model" name="spawnning_model" output="screen"
+    
+    args="-urdf -param robot_description -model robot"/>
+
+
+</launch>
